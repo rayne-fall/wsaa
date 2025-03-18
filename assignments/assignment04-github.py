@@ -5,3 +5,11 @@
 import requests
 import json
 from config import key as cfg
+
+# get key from config file and url for repository
+apikey = cfg["wsaakey"]
+url = "https://api.github.com/repos/rayne-fall/wsaa-private"
+# get contents of repo and provide authorisation
+response = requests.get(url, auth = ('token', apikey))
+# sanity check
+print(response.status_code)
