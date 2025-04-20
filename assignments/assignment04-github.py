@@ -11,5 +11,3 @@ apikey = cfg["wsaakey"]
 url = "https://api.github.com/repos/rayne-fall/wsaa-private"
 # get contents of repo and provide authorisation
 response = requests.get(url, auth = ('token', apikey))
-# sanity check
-print(response.status_code)
