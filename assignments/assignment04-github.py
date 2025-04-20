@@ -3,24 +3,29 @@
 # reads a file from a repository, replaces all instances of the word "Andrew" with "Sylvia", then commits and pushes these changes
 
 import requests
-import json
 from config import key as cfg
-from git import Repo
+from github import Github
 
-# get key from config file and url for repository
+# get key from config file
 apikey = cfg["wsaakey"]
-url = "https://api.github.com/repos/rayne-fall/wsaa-private"
 # get contents of repo and provide authorisation
-response = requests.get(url, auth = ('token', apikey))
+g=Github(apikey)
+repo=g.get_repo('rayne-fall/wsaa-private')
+file=repo.get_contents('text.txt')
+url=file.download_url
+response = requests.get(url)
+file_contents=response.text
 # read in file
-with open ('text.txt', 'r') as text:
+with open (file_contents, 'r') as text:
   data=text.read()
 # replace Andrew with Sylvia
 data=data.replace("Andrew", "Sylvia")
 # write changes to file
-with open ('text.txt', 'w') as text:
+with open (file_contents, 'w') as text:
   text.write(data)
-
+# commit and push changes  
+github_response=repo.update_file(file.path,'replaced Andrew with Sylvia',response,file.sha)
+print(github_response)
 
 
 # 1. https://stackoverflow.com/questions/17140886/how-to-search-and-replace-text-in-a-file
